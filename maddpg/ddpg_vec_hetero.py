@@ -1,13 +1,12 @@
-import sys
+import os
 
-import torch
-import torch.nn as nn
-from torch.optim import Adam
-from torch.autograd import Variable
-import torch.nn.functional as F
-from torch.nn.utils import clip_grad_norm_
 import numpy as np
-from ddpg_vec import Actor, soft_update, hard_update, Actor, Critic, adjust_lr
+import torch
+import torch.nn.functional as F
+from ddpg_vec import soft_update, hard_update, Actor, Critic, adjust_lr
+from torch.autograd import Variable
+from torch.nn.utils import clip_grad_norm_
+from torch.optim import Adam
 
 
 class DDPGH(object):
