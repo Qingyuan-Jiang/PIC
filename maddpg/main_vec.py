@@ -74,11 +74,13 @@ parser.add_argument('--episode_per_actor_update', type=int, default=4)
 parser.add_argument('--episode_per_critic_update', type=int, default=4)
 parser.add_argument('--steps_per_actor_update', type=int, default=100)
 parser.add_argument('--steps_per_critic_update', type=int, default=100)
-#parser.add_argument('--episodes_per_update', type=int, default=4)
+# parser.add_argument('--episodes_per_update', type=int, default=4)
 parser.add_argument('--target_update_mode', default='soft', help='soft | hard | episodic')
 parser.add_argument('--cuda', default=False, action='store_true')
 parser.add_argument('--eval_freq', type=int, default=1000)
 args = parser.parse_args()
+
+
 if args.exp_name is None:
     args.exp_name = args.scenario + '_' + args.critic_type + '_' + args.target_update_mode + '_hiddensize' \
                     + str(args.hidden_size) + '_' + str(args.seed)
@@ -87,10 +89,8 @@ for k, v in args.__dict__.items():
     print('{}: {}'.format(k, v))
 print("========================================")
 
-
 torch.set_num_threads(1)
 device = torch.device("cuda:0" if torch.cuda.is_available() and args.cuda else "cpu")
-
 
 env = make_env(args.scenario, None)
 n_agents = env.n
@@ -100,23 +100,23 @@ np.random.seed(args.seed)
 torch.manual_seed(args.seed)
 num_adversary = 0
 
-
 n_actions = n_actions(env.action_space)
 obs_dims = [env.observation_space[i].shape[0] for i in range(n_agents)]
 obs_dims.insert(0, 0)
 if 'hetero' in args.scenario:
     import multiagent.scenarios as scenarios
+
     groups = scenarios.load(args.scenario + ".py").Scenario().group
     agent = DDPGH(args.gamma, args.tau, args.hidden_size,
-                 env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
-                 args.actor_lr, args.critic_lr,
-                 args.fixed_lr, args.critic_type, args.train_noise, args.num_episodes,
-                 args.num_steps, args.critic_dec_cen, args.target_update_mode, device, groups=groups)
+                  env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
+                  args.actor_lr, args.critic_lr,
+                  args.fixed_lr, args.critic_type, args.train_noise, args.num_episodes,
+                  args.num_steps, args.critic_dec_cen, args.target_update_mode, device, groups=groups)
     eval_agent = DDPGH(args.gamma, args.tau, args.hidden_size,
-                 env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
-                 args.actor_lr, args.critic_lr,
-                 args.fixed_lr, args.critic_type, args.train_noise, args.num_episodes,
-                 args.num_steps, args.critic_dec_cen, args.target_update_mode, 'cpu', groups=groups)
+                       env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
+                       args.actor_lr, args.critic_lr,
+                       args.fixed_lr, args.critic_type, args.train_noise, args.num_episodes,
+                       args.num_steps, args.critic_dec_cen, args.target_update_mode, 'cpu', groups=groups)
 else:
     agent = DDPG(args.gamma, args.tau, args.hidden_size,
                  env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
@@ -124,10 +124,10 @@ else:
                  args.fixed_lr, args.critic_type, args.actor_type, args.train_noise, args.num_episodes,
                  args.num_steps, args.critic_dec_cen, args.target_update_mode, device)
     eval_agent = DDPG(args.gamma, args.tau, args.hidden_size,
-                 env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
-                 args.actor_lr, args.critic_lr,
-                 args.fixed_lr, args.critic_type, args.actor_type, args.train_noise, args.num_episodes,
-                 args.num_steps, args.critic_dec_cen, args.target_update_mode, 'cpu')
+                      env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
+                      args.actor_lr, args.critic_lr,
+                      args.fixed_lr, args.critic_type, args.actor_type, args.train_noise, args.num_episodes,
+                      args.num_steps, args.critic_dec_cen, args.target_update_mode, 'cpu')
 memory = ReplayMemory(args.replay_size)
 feat_dims = []
 for i in range(n_agents):
