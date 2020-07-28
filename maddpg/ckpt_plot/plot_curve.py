@@ -26,9 +26,8 @@ def plot_result(t1, r1, fig_name, x_label, y_label):
     base = None
     base, = plt.plot(t1, avg_list(r1))
 
-
     plt.grid()
-    #plt.legend([base, teach1, teach2, teach3], ['CA error < 5%', 'CA error < 10%', 'CA error < 20%', 'MADDPG + global count'])
+    # plt.legend([base, teach1, teach2, teach3], ['CA error < 5%', 'CA error < 10%', 'CA error < 20%', 'MADDPG + global count'])
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(fig_name)
@@ -65,7 +64,7 @@ def plot_result2(t1, r1, r2, fig_name, x_label, y_label):
     print('INFO: Wrote plot to ' + fig_name + '.pdf')
 
 
-def plot_result_mul(fig_name, x_label, y_label, legend, t1, r1,  t2, r2, t3, r3):
+def plot_result_mul(fig_name, x_label, y_label, legend, t1, r1, t2, r2, t3, r3):
     plt.close()
 
     l1, = plt.plot(t1, r1)
@@ -96,4 +95,3 @@ def read_csv(csv_path):
         for row in csv_reader:
             res[row[0]] = [float(r) for r in row[1:]]
     return res
-

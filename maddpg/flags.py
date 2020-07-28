@@ -1,4 +1,5 @@
 import argparse
+
 parser = argparse.ArgumentParser(description='PyTorch REINFORCE example')
 parser.add_argument('--scenario', required=True,
                     help='name of the environment to run')

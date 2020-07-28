@@ -6,7 +6,7 @@ from models.graph_layers import GraphConvLayer, MessageFunc, UpdateFunc
 
 class GraphNetHetro(nn.Module):
 
-  # A graph net that supports different edge attributes.
+    # A graph net that supports different edge attributes.
 
     def __init__(self, sa_dim, n_agents, hidden_size, agent_groups, agent_id=0,
                  pool_type='avg', use_agent_id=False):
@@ -50,7 +50,8 @@ class GraphNetHetro(nn.Module):
         # Create group embeddings.
         num_groups = len(agent_groups)
 
-        self.group_emb = nn.ParameterList([nn.Parameter(torch.randn(1, 1, group_emb_dim), requires_grad=True) for k in range(num_groups)])
+        self.group_emb = nn.ParameterList(
+            [nn.Parameter(torch.randn(1, 1, group_emb_dim), requires_grad=True) for k in range(num_groups)])
 
         # Assumes a fully connected graph.
         self.register_buffer('adj', (torch.ones(n_agents, n_agents) - torch.eye(n_agents)) / self.n_agents)
@@ -86,9 +87,9 @@ class GraphNetHetro(nn.Module):
         # Concat group embeddings, concat to input layer.
         group_emb_list = []
         for k_idx, k in enumerate(self.agent_groups):
-          group_emb_list += [self.group_emb[k_idx]]*k
+            group_emb_list += [self.group_emb[k_idx]] * k
         group_emb = torch.cat(group_emb_list, 1)
-        group_emb_batch = torch.cat([group_emb]*x.shape[0], 0)
+        group_emb_batch = torch.cat([group_emb] * x.shape[0], 0)
 
         x = torch.cat([x, group_emb_batch], -1)
 
@@ -152,7 +153,8 @@ class GraphNetV(nn.Module):
         # Create group embeddings.
         num_groups = len(agent_groups)
 
-        self.group_emb = nn.ParameterList([nn.Parameter(torch.randn(1, 1, group_emb_dim), requires_grad=True) for k in range(num_groups)])
+        self.group_emb = nn.ParameterList(
+            [nn.Parameter(torch.randn(1, 1, group_emb_dim), requires_grad=True) for k in range(num_groups)])
 
         # Assumes a fully connected graph.
         self.register_buffer('adj', (torch.ones(n_agents, n_agents) - torch.eye(n_agents)) / self.n_agents)
@@ -188,9 +190,9 @@ class GraphNetV(nn.Module):
         # Concat group embeddings, concat to input layer.
         group_emb_list = []
         for k_idx, k in enumerate(self.agent_groups):
-          group_emb_list += [self.group_emb[k_idx]]*k
+            group_emb_list += [self.group_emb[k_idx]] * k
         group_emb = torch.cat(group_emb_list, 1)
-        group_emb_batch = torch.cat([group_emb]*x.shape[0], 0)
+        group_emb_batch = torch.cat([group_emb] * x.shape[0], 0)
 
         x = torch.cat([x, group_emb_batch], -1)
 
@@ -207,6 +209,7 @@ class GraphNetV(nn.Module):
         elif self.pool_type == 'max':
             ret, _ = out.max(1)
         return ret
+
 
 class GraphNet(nn.Module):
     """

@@ -26,7 +26,6 @@ def main():
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
     # env = make_env('simple_spread_n6', None)
     # env = make_env('simple_coop_push_n15', None)
     env = make_env('simple_tag_n3', None)
@@ -39,7 +38,6 @@ def main():
     torch.manual_seed(seed)
     num_adversary = 0
 
-
     obs_dims = [env.observation_space[i].shape[0] for i in range(n_agents)]
     obs_dims.insert(0, 0)
 
@@ -51,6 +49,7 @@ def main():
             next_state, rewards, done, reward_info = env.step(np.random.randint(0, 5, (n_agents, 5)).tolist())
             print(rewards)
             env.render()
+
 
 if __name__ == "__main__":
     main()
