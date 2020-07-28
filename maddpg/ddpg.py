@@ -134,8 +134,10 @@ class DDPG(object):
             group = [1, 1, 2, 3, 1]
             # spread n=30
             # group = [1, 1, 6, 5]
-            self.actor = ActorG(hidden_size, obs_dim, n_action, int(obs_dim / 2), actor_type, group=group).to(self.device)
-            self.actor_target = ActorG(hidden_size, obs_dim, n_action, int(obs_dim / 2), actor_type, group=group).to(self.device)
+            self.actor = ActorG(hidden_size, obs_dim, n_action, int(obs_dim / 2), actor_type, group=group).to(
+                self.device)
+            self.actor_target = ActorG(hidden_size, obs_dim, n_action, int(obs_dim / 2), actor_type, group=group).to(
+                self.device)
             self.actor_perturbed = ActorG(hidden_size, obs_dim, n_action, int(obs_dim / 2), actor_type, group=group)
         else:
             self.actor = Actor(hidden_size, obs_dim, n_action).to(self.device)
@@ -145,8 +147,10 @@ class DDPG(object):
                                 lr=actor_lr, weight_decay=0)
 
         if critic_dec_cen == 'decen':
-            self.critic = Critic(hidden_size, obs_dims[agent_id + 1], n_action, 1, critic_type, agent_id).to(self.device)
-            self.critic_target = Critic(hidden_size, obs_dims[agent_id + 1], n_action, 1, critic_type, agent_id).to(self.device)
+            self.critic = Critic(hidden_size, obs_dims[agent_id + 1], n_action, 1, critic_type, agent_id).to(
+                self.device)
+            self.critic_target = Critic(hidden_size, obs_dims[agent_id + 1], n_action, 1, critic_type, agent_id).to(
+                self.device)
         else:
             self.critic = Critic(hidden_size, np.sum(obs_dims),
                                  n_action * n_agent, n_agent, critic_type, agent_id).to(self.device)
@@ -176,8 +180,6 @@ class DDPG(object):
         # Make sure target is with the same weight
         hard_update(self.actor_target, self.actor)
         hard_update(self.critic_target, self.critic)
-
-
 
     def adjust_lr(self, i_episode):
         adjust_lr(self.actor_optim, self.init_act_lr, i_episode, self.num_episodes, self.start_episode)
@@ -229,12 +231,11 @@ class DDPG(object):
             new_action_batch = action_batch.view(-1, self.n_agent, self.n_action)
             action_batch = new_action_batch[:, rand_idx, :].view(-1, self.n_action * self.n_agent)
 
-
         next_action_batch = self.select_action(
             next_state_batch.view(-1, self.obs_dim), action_noise=self.train_noise)
         next_action_batch = next_action_batch.view(-1, self.n_action * self.n_agent)
         next_state_action_values = self.critic_target(
-                next_state_batch, next_action_batch)
+            next_state_batch, next_action_batch)
 
         reward_batch = reward_batch[:, agent_id].unsqueeze(1)
         mask_batch = mask_batch[:, agent_id].unsqueeze(1)
@@ -266,11 +267,10 @@ class DDPG(object):
             state_batch.view(-1, self.obs_dim), action_noise=self.train_noise, grad=True)
         action_batch_n = action_batch_n.view(-1, self.n_action * self.n_agent)
 
-
         policy_loss = -self.critic(state_batch, action_batch_n)
         policy_loss = policy_loss.mean() + 1e-3 * (logit ** 2).mean()
         policy_loss.backward()
-        #clip_grad_norm_(self.actor.parameters(), 0.00000001)
+        # clip_grad_norm_(self.actor.parameters(), 0.00000001)
         clip_grad_norm_(self.actor_params, 0.5)
         self.actor_optim.step()
 
@@ -278,7 +278,6 @@ class DDPG(object):
         soft_update(self.critic_target, self.critic, self.tau)
 
         return policy_loss.item()
-
 
     def perturb_actor_parameters(self, param_noise):
         """Apply parameter noise to actor model, for exploration"""

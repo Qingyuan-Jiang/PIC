@@ -10,8 +10,6 @@ import numpy as np
 from ddpg_vec import Actor, soft_update, hard_update, Actor, Critic, adjust_lr
 
 
-
-
 class DDPGH(object):
     def __init__(self, gamma, tau, hidden_size, obs_dim, n_action, n_agent, obs_dims, agent_id, actor_lr, critic_lr,
                  fixed_lr, critic_type, train_noise, num_episodes, num_steps,
@@ -24,14 +22,15 @@ class DDPGH(object):
         self.n_agent = n_agent
         self.n_action = n_action
         self.actors = [Actor(hidden_size, self.group_dim_id[i], n_action).to(self.device) for i in range(len(groups))]
-        self.actor_targets = [Actor(hidden_size, self.group_dim_id[i], n_action).to(self.device) for i in range(len(groups))]
+        self.actor_targets = [Actor(hidden_size, self.group_dim_id[i], n_action).to(self.device) for i in
+                              range(len(groups))]
         self.actor_optims = [Adam(self.actors[i].parameters(),
-                                lr=actor_lr, weight_decay=0) for i in range(len(groups))]
+                                  lr=actor_lr, weight_decay=0) for i in range(len(groups))]
 
         self.critic = Critic(hidden_size, np.sum(obs_dims),
-                                 n_action * n_agent, n_agent, critic_type, agent_id, groups).to(self.device)
+                             n_action * n_agent, n_agent, critic_type, agent_id, groups).to(self.device)
         self.critic_target = Critic(hidden_size, np.sum(
-                obs_dims), n_action * n_agent, n_agent, critic_type, agent_id, groups).to(self.device)
+            obs_dims), n_action * n_agent, n_agent, critic_type, agent_id, groups).to(self.device)
         critic_n_params = sum(p.numel() for p in self.critic.parameters())
         print('# of critic params', critic_n_params)
         self.critic_optim = Adam(self.critic.parameters(), lr=critic_lr)
@@ -74,8 +73,9 @@ class DDPGH(object):
         mus_l = []
         scale = int(state.size()[0] / self.n_agent)
         for i in range(self.n_group):
-            act, mu = self.select_action_single(self.actors[i], state[scale * self.group_cum_id[i]:scale * self.group_cum_id[i+1]],
-                                      action_noise, param_noise, grad)
+            act, mu = self.select_action_single(self.actors[i],
+                                                state[scale * self.group_cum_id[i]:scale * self.group_cum_id[i + 1]],
+                                                action_noise, param_noise, grad)
             actions_l.append(act)
             mus_l.append(mu)
         if grad:
@@ -119,7 +119,7 @@ class DDPGH(object):
             next_state_batch.view(-1, self.obs_dim), action_noise=self.train_noise)
         next_action_batch = next_action_batch.view(-1, self.n_action * self.n_agent)
         next_state_action_values = self.critic_target(
-                next_state_batch, next_action_batch)
+            next_state_batch, next_action_batch)
 
         reward_batch = reward_batch[:, agent_id].unsqueeze(1)
         mask_batch = mask_batch[:, agent_id].unsqueeze(1)
@@ -163,7 +163,6 @@ class DDPGH(object):
         soft_update(self.critic_target, self.critic, self.tau)
 
         return policy_loss.item()
-
 
     def perturb_actor_parameters(self, param_noise):
         """Apply parameter noise to actor model, for exploration"""

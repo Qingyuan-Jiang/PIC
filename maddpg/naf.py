@@ -6,16 +6,20 @@ from torch.optim import Adam
 from torch.autograd import Variable
 import torch.nn.functional as F
 
+
 def MSELoss(input, target):
-    return torch.sum((input - target)**2) / input.data.nelement()
+    return torch.sum((input - target) ** 2) / input.data.nelement()
+
 
 def soft_update(target, source, tau):
     for target_param, param in zip(target.parameters(), source.parameters()):
         target_param.data.copy_(target_param.data * (1.0 - tau) + param.data * tau)
 
+
 def hard_update(target, source):
     for target_param, param in zip(target.parameters(), source.parameters()):
         target_param.data.copy_(param.data)
+
 
 class Policy(nn.Module):
 
@@ -87,7 +91,7 @@ class NAF:
     def __init__(self, gamma, tau, hidden_size, num_inputs, action_space):
         self.action_space = action_space
         self.num_inputs = num_inputs
-        
+
         self.model = Policy(hidden_size, num_inputs, action_space)
         self.target_model = Policy(hidden_size, num_inputs, action_space)
         self.optimizer = Adam(self.model.parameters(), lr=1e-3)
@@ -138,7 +142,7 @@ class NAF:
             os.makedirs('models/')
 
         if model_path is None:
-            model_path = "models/naf_{}_{}".format(env_name, suffix) 
+            model_path = "models/naf_{}_{}".format(env_name, suffix)
         print('Saving model to {}'.format(actor_path))
         torch.save(self.model.state_dict(), model_path)
 
