@@ -95,3 +95,16 @@ def read_csv(csv_path):
         for row in csv_reader:
             res[row[0]] = [float(r) for r in row[1:]]
     return res
+
+
+if __name__ == '__main__':
+
+    print("Evaluating the scenario. ")
+    PATH = 'coop_navigation_n6/train_curve.csv'
+
+    result = read_csv(PATH)
+    steps = result['steps']
+    rewards = result['rewards']
+
+    plot_result(steps, rewards, 'fig_test', 'steps', 'rewards')
+    print("Evaluation end. ")
