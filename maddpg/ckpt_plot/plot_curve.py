@@ -100,11 +100,11 @@ def read_csv(csv_path):
 if __name__ == '__main__':
 
     print("Evaluating the scenario. ")
-    PATH = 'coop_navigation_n6/train_curve.csv'
+    PATH = 'comp_pe_n2/train_curve.csv'
 
     result = read_csv(PATH)
     steps = result['steps']
     rewards = result['rewards']
 
-    plot_result(steps, rewards, 'fig_test', 'steps', 'rewards')
+    plot_result(steps, rewards, 'pe_n3', 'steps', 'rewards')
     print("Evaluation end. ")
