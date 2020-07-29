@@ -26,9 +26,9 @@ def main():
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    env = make_env('simple_spread_n6', None)
+    # env = make_env('simple_spread_n6', None)
     # env = make_env('simple_coop_push_n15', None)
-    # env = make_env('simple_tag_n3', None)
+    env = make_env('simple_tag_n3', None)
     # env = make_env('hetero_spread_n4', None)
     n_agents = env.n
     seed = 0
@@ -41,7 +41,7 @@ def main():
     obs_dims = [env.observation_space[i].shape[0] for i in range(n_agents)]
     obs_dims.insert(0, 0)
 
-    for _ in range(10):
+    for _ in range(5):
         env.reset()
         print('Restart')
         for idx in range(100):

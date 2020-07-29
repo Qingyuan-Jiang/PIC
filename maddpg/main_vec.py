@@ -82,8 +82,7 @@ args = parser.parse_args()
 
 
 if args.exp_name is None:
-    args.exp_name = args.scenario + '_' + args.critic_type + '_' + args.target_update_mode + '_hiddensize' \
-                    + str(args.hidden_size) + '_' + str(args.seed)
+    args.exp_name = args.scenario + '_' + args.critic_type + '_' + args.target_update_mode + '_hiddensize' + str(args.hidden_size) + '_' + str(args.seed)
 print("=================Arguments==================")
 for k, v in args.__dict__.items():
     print('{}: {}'.format(k, v))
@@ -112,6 +111,7 @@ if 'hetero' in args.scenario:
                   args.actor_lr, args.critic_lr,
                   args.fixed_lr, args.critic_type, args.train_noise, args.num_episodes,
                   args.num_steps, args.critic_dec_cen, args.target_update_mode, device, groups=groups)
+
     eval_agent = DDPGH(args.gamma, args.tau, args.hidden_size,
                        env.observation_space[0].shape[0], n_actions[0], n_agents, obs_dims, 0,
                        args.actor_lr, args.critic_lr,

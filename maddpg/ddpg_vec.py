@@ -143,8 +143,7 @@ class DDPG(object):
             self.actor = Actor(hidden_size, obs_dim, n_action).to(self.device)
             self.actor_target = Actor(hidden_size, obs_dim, n_action).to(self.device)
             self.actor_perturbed = Actor(hidden_size, obs_dim, n_action)
-        self.actor_optim = Adam(self.actor.parameters(),
-                                lr=actor_lr, weight_decay=0)
+        self.actor_optim = Adam(self.actor.parameters(), lr=actor_lr, weight_decay=0)
 
         if critic_dec_cen == 'decen':
             self.critic = Critic(hidden_size, obs_dims[agent_id + 1], n_action, 1, critic_type, agent_id).to(
@@ -194,12 +193,9 @@ class DDPG(object):
 
     def select_action(self, state, action_noise=None, param_noise=False, grad=False):
         self.actor.eval()
-        if param_noise:
-            mu = self.actor_perturbed((Variable(state)))
-        else:
-            mu = self.actor((Variable(state)))
-
+        mu = self.actor_perturbed((Variable(state))) if param_noise else self.actor((Variable(state)))
         self.actor.train()
+
         if not grad:
             mu = mu.data
 
@@ -234,8 +230,7 @@ class DDPG(object):
         next_action_batch = self.select_action(
             next_state_batch.view(-1, self.obs_dim), action_noise=self.train_noise)
         next_action_batch = next_action_batch.view(-1, self.n_action * self.n_agent)
-        next_state_action_values = self.critic_target(
-            next_state_batch, next_action_batch)
+        next_state_action_values = self.critic_target(next_state_batch, next_action_batch)
 
         reward_batch = reward_batch[:, agent_id].unsqueeze(1)
         mask_batch = mask_batch[:, agent_id].unsqueeze(1)

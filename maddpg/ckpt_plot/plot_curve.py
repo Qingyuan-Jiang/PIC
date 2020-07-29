@@ -100,7 +100,7 @@ def read_csv(csv_path):
 if __name__ == '__main__':
 
     print("Evaluating the scenario. ")
-    PATH = 'comp_pe_n2/train_curve.csv'
+    PATH = 'comp_pe_n3/train_curve.csv'
 
     result = read_csv(PATH)
     steps = result['steps']
