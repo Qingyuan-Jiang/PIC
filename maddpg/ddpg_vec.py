@@ -1,4 +1,5 @@
 import sys
+import os
 
 import torch
 import torch.nn as nn
@@ -8,7 +9,11 @@ import torch.nn.functional as F
 from torch.nn.utils import clip_grad_norm_
 import numpy as np
 from torch.optim.lr_scheduler import LambdaLR
-from models import model_factory
+
+ROOT_DIR = os.path.abspath("../")
+sys.path.append(ROOT_DIR)
+
+from maddpg.models import model_factory
 
 
 def soft_update(target, source, tau):

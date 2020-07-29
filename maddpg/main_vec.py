@@ -1,25 +1,25 @@
 import argparse
-import math
-from collections import namedtuple
-from itertools import count
-import numpy as np
-from eval import eval_model_q
-import copy
-import torch
-from ddpg_vec import DDPG
-from ddpg_vec_hetero import DDPGH
-import random
-
-from replay_memory import ReplayMemory, Transition
-from utils import *
 import os
+import random
 import time
-from utils import n_actions, copy_actor_policy
-from ddpg_vec import hard_update
-import torch.multiprocessing as mp
-from multiprocessing import Queue
-from multiprocessing.sharedctypes import Value
 import sys
+from multiprocessing import Queue
+
+import numpy as np
+import torch
+import torch.multiprocessing as mp
+from multiprocessing.sharedctypes import Value
+
+ROOT_DIR = os.path.abspath("../")
+sys.path.append(ROOT_DIR)
+
+from maddpg.ddpg_vec import DDPG
+from maddpg.ddpg_vec import hard_update
+from maddpg.ddpg_vec_hetero import DDPGH
+from maddpg.eval import eval_model_q
+from maddpg.replay_memory import ReplayMemory, Transition
+from maddpg.utils import *
+from maddpg.utils import n_actions, copy_actor_policy
 
 parser = argparse.ArgumentParser(description='PyTorch REINFORCE example')
 parser.add_argument('--scenario', required=True,

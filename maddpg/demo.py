@@ -1,22 +1,12 @@
-import argparse
-import math
 from collections import namedtuple
 from itertools import count
 import numpy as np
 from eval import eval_model_q
-import copy
 import torch
-from ddpg_vec import DDPG
-from ddpg_vec_hetero import DDPGH
 import random
 
-from replay_memory import ReplayMemory, Transition
 from utils import *
-import os
-import time
-from utils import n_actions, copy_actor_policy
 from ddpg_vec import hard_update
-import torch.multiprocessing as mp
 from multiprocessing import Queue
 from multiprocessing.sharedctypes import Value
 import sys
